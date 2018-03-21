@@ -18,6 +18,7 @@ const FETCH_CONTACTS_PENDING = `${REDUCER_BASE}/FETCH_CONTACTS_PENDING`;
 const FETCH_CONTACTS_FULFILLED = `${REDUCER_BASE}/FETCH_CONTACTS_FULFILLED`;
 const FETCH_CONTACTS_FAILED = `${REDUCER_BASE}/FETCH_CONTACTS_FAILED`;
 const RESET_CURRENT_CONTACT = `${REDUCER_BASE}/RESET_CURRENT_CONTACT`;
+const SET_CURRENT_CONTACT = `${REDUCER_BASE}/SET_CURRENT_CONTACT`;
 
 const initialState = {
 	contacts: [],
@@ -71,6 +72,11 @@ export default function reducer(state = initialState, action) {
 				...state,
 				currentContact: null
 			};
+		case SET_CURRENT_CONTACT:
+			return {
+				...state,
+				currentContact: action.payload
+			};
 		default:
 			return state;
 	}
@@ -88,3 +94,5 @@ export const addContactSuccess = () => ({ type: ADD_CONTACT_SUCCESS });
 export const addContactFailed = () => ({ type: ADD_CONTACT_FAILED });
 export const resetCurrentContact = () => ({ type: RESET_CURRENT_CONTACT });
 export const addContact = contact => ({ type: ADD_CONTACT, payload: contact });
+export const removeContact = id => ({ type: REMOVE_CONTACT, id });
+export const setCurrentContact = contact => ({ type: SET_CURRENT_CONTACT, payload: contact });

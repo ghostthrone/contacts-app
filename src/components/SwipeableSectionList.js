@@ -20,7 +20,7 @@ export default class SwipeableSectionList extends Component {
 
 		data.forEach(item => {
 			const firstLetter = item[sectionBy][0].toUpperCase();
-			if(firstLetter in sectionedData)
+			if (firstLetter in sectionedData)
 				sectionedData[firstLetter].data.push(item);
 			else {
 				sectionedData[firstLetter] = {
@@ -37,11 +37,13 @@ export default class SwipeableSectionList extends Component {
 	}
 
 	renderListItem = ({ item }) => (
-		<SwipeableListItem 
+		<SwipeableListItem
 			data={item}
 			onSwipeStart={this.disableScroll}
 			onSwipeRelease={this.enableScroll}
 			isScrolling={this.state.isScrolling}
+			onEdit={id => this.props.onEditItem(id)}
+			onRemove={id => this.props.onRemoveItem(id)}
 		/>
 	);
 
@@ -62,10 +64,11 @@ export default class SwipeableSectionList extends Component {
 	}
 
 	render = () => (
-		<SectionList 
-			sections={this.normalizeData(this.props.data, this.props.sectionBy)} 
+		<SectionList
+			sections={this.normalizeData(this.props.data, this.props.sectionBy)}
 			renderItem={this.renderListItem}
 			renderSectionHeader={this.renderListSectionHeader}
+			keyExtractor={item => item.id}
 			scrollEnabled={!this.state.isSwiping}
 			onScrollBeginDrag={() => this.setState({ isScrolling: true })}
 			onScrollEndDrag={() => this.setState({ isScrolling: false })}

@@ -18,7 +18,7 @@ import { PacmanIndicator } from 'react-native-indicators';
 import SearchBox from '../components/SearchBox';
 import { ContactFormScreen } from '../screens/constants';
 import { selectPlatform, requestStatus } from '../utils/common';
-import { resetCurrentContact, fetchContacts } from '../redux/modules/contacts';
+import { resetCurrentContact, fetchContacts, removeContact, setCurrentContact } from '../redux/modules/contacts';
 import SwipeableSectionList from '../components/SwipeableSectionList';
 
 const mapStateToProps = state => ({
@@ -28,13 +28,14 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
 	resetCurrentContact: compose(dispatch, resetCurrentContact),
-	fetchContacts: compose(dispatch, fetchContacts)
+	fetchContacts: compose(dispatch, fetchContacts),
+	removeContact: compose(dispatch, removeContact),
+	setCurrentContact: compose(dispatch, setCurrentContact)
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class ContactListScreen extends Component {
-	handleNewContact = () => {
-		this.props.resetCurrentContact();
+	showFormContactModal = () => 
 		this.props.navigator.showModal({
 			screen: ContactFormScreen,
 			navigatorStyle: {
@@ -45,7 +46,22 @@ export default class ContactListScreen extends Component {
 				orientation: 'auto',
 			}
 		});
+
+	handleNewContact = () => {
+		this.props.resetCurrentContact();
+		this.showFormContactModal();
 	}
+
+	handleEditItem = id => {
+		const { contacts } = this.props;
+		const contact = contacts.find(contact => contact.id === id);
+		if(contact !== undefined) {
+			this.props.setCurrentContact(contact);
+			this.showFormContactModal();
+		}
+	}
+
+	handleRemoveItem = id => this.props.removeContact(id);
 
 	renderListView = () => {
 		const { contacts, fetchContactsStatus } = this.props;
@@ -72,6 +88,8 @@ export default class ContactListScreen extends Component {
 						<SwipeableSectionList 
 							data={contacts}
 							sectionBy='name'
+							onEditItem={this.handleEditItem}
+							onRemoveItem={this.handleRemoveItem}
 						/>
 					);
 		}
@@ -97,7 +115,7 @@ export default class ContactListScreen extends Component {
 				{this.renderListView()}
 				<ActionButton
 					onPress={this.handleNewContact}
-					renderIcon={() => <Icon name="plus-button" style={{ color: 'white' }} />}
+					renderIcon={() => <Icon name="add-friend" style={{ color: 'white' }} />}
 					buttonColor="#000"
 					fixNativeFeedbackRadius={true}
 					useNativeFeedback={false}
