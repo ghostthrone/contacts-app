@@ -36,10 +36,10 @@ export const removeContactById = async (contactsRef, id) => {
  */
 export const updateContactById = async (contactsRef, updatedContact) => {
 	try {
-		const id = updatedContact.id;
+		const { id } = updatedContact;
 		await contactsRef.child(id).update(updatedContact);
 		return true;
-	} catch(ex){
+	} catch (ex) {
 		return false;
 	}
 }

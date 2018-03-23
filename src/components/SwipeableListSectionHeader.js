@@ -1,17 +1,10 @@
 import React, { Component } from 'react';
-import { Heading, View } from '@shoutem/ui';
-
-const styles = {
-	paddingLeft: 15,
-	backgroundColor: 'black'
-}
+import { Divider, Caption } from '@shoutem/ui';
 
 const SwipeableListSectionHeader = ({ title }) => (
-	<View style={styles}>
-		<Heading style={{ color: 'white' }}>
-			{title}
-		</Heading>
-	</View>
+	<Divider styleName="section-header">
+		<Caption>{title}</Caption>
+	</Divider>
 );
 
 export default SwipeableListSectionHeader;

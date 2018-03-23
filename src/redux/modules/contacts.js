@@ -95,4 +95,5 @@ export const addContactFailed = () => ({ type: ADD_CONTACT_FAILED });
 export const resetCurrentContact = () => ({ type: RESET_CURRENT_CONTACT });
 export const addContact = contact => ({ type: ADD_CONTACT, payload: contact });
 export const removeContact = id => ({ type: REMOVE_CONTACT, id });
+export const updateContact = contact => ({ type: UPDATE_CONTACT, payload: contact });
 export const setCurrentContact = contact => ({ type: SET_CURRENT_CONTACT, payload: contact });

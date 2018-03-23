@@ -18,7 +18,7 @@ import { compose } from 'redux';
 
 import { selectPlatform, requestStatus } from '../utils/common';
 import ContactIcon from '../components/ContactIcon';
-import { addContact } from '../redux/modules/contacts';
+import { addContact, resetCurrentContact, updateContact } from '../redux/modules/contacts';
 import { NotificationScreen } from '../screens/constants';
 
 const textInputMargins = {
@@ -34,7 +34,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-	addContact: compose(dispatch, addContact)
+	addContact: compose(dispatch, addContact),
+	resetCurrentContact: compose(dispatch, resetCurrentContact),
+	updateContact: compose(dispatch, updateContact)
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -66,11 +68,15 @@ export default class ContactFormScreen extends Component {
 			autoDismissTimerSec: 2
 		});
 
-	handleBack = () => this.props.navigator.dismissModal();
+	handleBack = () => {
+		this.props.navigator.dismissModal();
+		this.props.resetCurrentContact();
+	}
 
 	handleButtonPress = () => {
 		const { name, email, phone } = this.state;
 		let hadError = false;
+		const isEditing = this.props.contact !== null;
 
 		if (!name) {
 			this.showNotificationError('El nombre no puede estar vacío');
@@ -100,22 +106,49 @@ export default class ContactFormScreen extends Component {
 			return;
 		}
 
-		if(phone && !/((?:\+|00)[17](?: |\-)?|(?:\+|00)[1-9]\d{0,2}(?: |\-)?|(?:\+|00)1\-\d{3}(?: |\-)?)?(0\d|\([0-9]{3}\)|[1-9]{0,3})(?:((?: |\-)[0-9]{2}){4}|((?:[0-9]{2}){4})|((?: |\-)[0-9]{3}(?: |\-)[0-9]{4})|([0-9]{7}))/g.test(String(phone))) {
+		if (phone && !/((?:\+|00)[17](?: |\-)?|(?:\+|00)[1-9]\d{0,2}(?: |\-)?|(?:\+|00)1\-\d{3}(?: |\-)?)?(0\d|\([0-9]{3}\)|[1-9]{0,3})(?:((?: |\-)[0-9]{2}){4}|((?:[0-9]{2}){4})|((?: |\-)[0-9]{3}(?: |\-)[0-9]{4})|([0-9]{7}))/g.test(String(phone))) {
 			this.showNotificationError('Ingrese un telefono válido');
 			this.phoneInput.focus();
 			hadError = true;
 			return;
 		}
 
-		if(phone && String(phone).length < 7) {
+		if (phone && String(phone).length < 7) {
 			this.showNotificationError('El telefono debe tener mínimo 7 dígitos');
 			this.phoneInput.focus();
 			hadError = true;
 			return;
 		}
 
-		if (!hadError)
-			this.props.addContact({ name, email, phone });
+		if (!hadError) {
+			if (!isEditing)
+				this.props.addContact({ name, email, phone });
+			else
+				this.props.updateContact({ id: this.state.id, name, email, phone });
+		}
+	}
+
+	renderButtons = () => {
+		const isEditing = this.props.contact !== null;
+		if (isEditing)
+			return (
+				<View styleName="horizontal" style={{...textInputMargins }}>
+					<Button styleName="confirmation dark" style={{ backgroundColor: 'black', margin: 0 }} onPress={this.handleButtonPress}>
+						<Text style={{ color: 'white' }}>GUARDAR</Text>
+					</Button>
+					<Button styleName="confirmation" style={{ margin: 0 }} onPress={this.handleBack}>
+						<Text>REGRESAR</Text>
+					</Button>
+				</View>
+			);
+		else
+			return (
+				<Button styleName='full-width' style={{ ...textInputMargins, backgroundColor: 'black' }} onPress={this.handleButtonPress}>
+					<Text style={{ color: 'white' }}>
+						CREAR
+					</Text>
+				</Button>
+			);
 	}
 
 	componentDidMount = () => {
@@ -125,7 +158,7 @@ export default class ContactFormScreen extends Component {
 	}
 
 	componentWillReceiveProps = nextProps => {
-		switch(nextProps.addContactStatus) {
+		switch (nextProps.addContactStatus) {
 			case requestStatus.SUCCESS:
 				this.props.navigator.dismissModal();
 				break;
@@ -187,11 +220,7 @@ export default class ContactFormScreen extends Component {
 							inputRef={input => this.phoneInput = input}
 							onSubmitEditing={ev => Keyboard.dismiss()}
 						/>
-						<Button styleName='full-width' style={{ ...textInputMargins, backgroundColor: 'black' }} onPress={this.handleButtonPress}>
-							<Text style={{ color: 'white' }}>
-								{isEditing ? 'GUARDAR' : 'CREAR'}
-							</Text>
-						</Button>
+						{this.renderButtons()}
 					</View>
 				</ScrollView>
 			</Screen>

@@ -1,6 +1,5 @@
 import { createStore, applyMiddleware } from "redux";
 import createSagaMiddleware from 'redux-saga';
-import logger from 'redux-logger';
 
 import contacts from './modules/contacts';
 import configureFirebase from '../firebase/configureFirebase';
@@ -13,7 +12,7 @@ export default function configureStore() {
 			firebase
 		}
 	});
-	const store = createStore(contacts, applyMiddleware(sagaMiddleware, logger))
+	const store = createStore(contacts, applyMiddleware(sagaMiddleware))
 
 	return {
 		store,

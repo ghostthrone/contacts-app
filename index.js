@@ -24,5 +24,6 @@ Navigation.startSingleScreenApp({
 			statusBarColor: 'transparent',
 			drawUnderStatusBar: true
 		}
-	}
+	},
+	animationType: 'fade'
 });

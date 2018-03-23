@@ -33,10 +33,22 @@ export default class SwipeableListItem extends Component {
 	renderSwipeableRightButtons = () => {
 		const { id } = this.props.data;
 		return [
-			<TouchableOpacity style={{ ...generalTouchableOpacityStyle, backgroundColor: '#1E88E5' }} onPress={() => this.props.onEdit(id)}>
+			<TouchableOpacity 
+				style={{ ...generalTouchableOpacityStyle, backgroundColor: '#1E88E5' }} 
+				onPress={() => {
+					this.handleUserBeganScrollingParentView();
+					this.props.onEdit(id);
+				}}
+			>
 				<Icon name="edit" style={{ color: 'white' }} />
 			</TouchableOpacity>,
-			<TouchableOpacity style={{ ...generalTouchableOpacityStyle, backgroundColor: '#EF5350' }} onPress={() => this.props.onRemove(id)}>
+			<TouchableOpacity 
+				style={{ ...generalTouchableOpacityStyle, backgroundColor: '#EF5350' }} 
+				onPress={() => {
+					this.handleUserBeganScrollingParentView();
+					this.props.onRemove(id);
+				}}
+			>
 				<Icon name="close" style={{ color: 'white' }} />
 			</TouchableOpacity>
 		]
@@ -46,7 +58,8 @@ export default class SwipeableListItem extends Component {
 		const {
 			name,
 			email,
-			phone
+			phone,
+			id
 		} = this.props.data;
 
 		return (
@@ -56,13 +69,15 @@ export default class SwipeableListItem extends Component {
 				onSwipeRelease={this.props.onSwipeRelease}
 				onRef={ref => this.swipeable = ref}
 			>
-				<Row styleName="small">
-					<Icon name="user-profile" />
-					<View styleName="vertical">
-						<Subtitle>{name}</Subtitle>
-						<Caption numberOfLines={1} style={{ color: '#9e9e9e' }}>{phone}</Caption>
-					</View>
-				</Row>
+				<TouchableOpacity onPress={() => this.props.onContactPressed(id)}>
+					<Row styleName="small">
+						<Icon name="user-profile" />
+						<View styleName="vertical">
+							<Subtitle>{name}</Subtitle>
+							<Caption numberOfLines={1} style={{ color: '#9e9e9e' }}>{phone}</Caption>
+						</View>
+					</Row>
+				</TouchableOpacity>
 			</Swipeable>
 		);
 	}

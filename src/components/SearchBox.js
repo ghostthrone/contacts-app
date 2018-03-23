@@ -28,10 +28,10 @@ const textInputStyle = {
 	margin: 0
 };
 
-const SearchBox = () => (
+const SearchBox = ({ onSearch }) => (
 	<View style={style.container}>
 		<View style={style.innerContainer}>
-			<TextInput onChangeText={console.log} style={textInputStyle} placeholder='Buscar'/>
+			<TextInput onChangeText={onSearch} style={textInputStyle} placeholder='Buscar'/>
 			<Icon name="search" />
 		</View>
 	</View>

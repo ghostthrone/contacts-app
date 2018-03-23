@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { SectionList } from 'react-native';
+import { Divider } from '@shoutem/ui';
 
 import SwipeableListSectionHeader from './SwipeableListSectionHeader';
 import SwipeableListItem from './SwipeableListItem';
@@ -33,7 +34,13 @@ export default class SwipeableSectionList extends Component {
 		for (const key in sectionedData)
 			result.push(sectionedData[key]);
 
-		return result;
+		return result.sort((a, b) => {
+			if (a.title < b.title)
+				return -1;
+			if (a.title > b.title)
+				return 1;
+			return 0;
+		});
 	}
 
 	renderListItem = ({ item }) => (
@@ -44,6 +51,7 @@ export default class SwipeableSectionList extends Component {
 			isScrolling={this.state.isScrolling}
 			onEdit={id => this.props.onEditItem(id)}
 			onRemove={id => this.props.onRemoveItem(id)}
+			onContactPressed={id => this.props.onContactPressed(id)}
 		/>
 	);
 
@@ -73,6 +81,7 @@ export default class SwipeableSectionList extends Component {
 			onScrollBeginDrag={() => this.setState({ isScrolling: true })}
 			onScrollEndDrag={() => this.setState({ isScrolling: false })}
 			ref={ref => this.sectionListRef = ref}
+			ItemSeparatorComponent={() => <Divider styleName="line" />}
 		/>
 	);
 }  
