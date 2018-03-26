@@ -1,9 +1,9 @@
 import { takeEvery, call, put, getContext } from 'redux-saga/effects';
 
-import {fetchContacts} from '../../firebase/operations';
+import { fetchContacts } from '../../firebase/operations';
 
-import { 
-	FETCH_CONTACTS, 
+import {
+	FETCH_CONTACTS,
 	fetchContactsFulfilled,
 	fetchContactsFailed,
 	fetchContactsPending

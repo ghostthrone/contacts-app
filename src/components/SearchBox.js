@@ -20,10 +20,10 @@ const style = StyleSheet.create({
 	}
 });
 
-const textInputStyle = { 
-	borderRadius: 50, 
-	width: '80%', 
-	padding: 0, 
+const textInputStyle = {
+	borderRadius: 50,
+	width: '80%',
+	padding: 0,
 	paddingLeft: 10,
 	margin: 0
 };
@@ -31,7 +31,7 @@ const textInputStyle = {
 const SearchBox = ({ onSearch }) => (
 	<View style={style.container}>
 		<View style={style.innerContainer}>
-			<TextInput onChangeText={onSearch} style={textInputStyle} placeholder='Buscar'/>
+			<TextInput onChangeText={onSearch} style={textInputStyle} placeholder='Buscar' />
 			<Icon name="search" />
 		</View>
 	</View>

@@ -9,11 +9,11 @@ function* addContactWorker(action) {
 		const firebase = yield getContext('firebase');
 		const database = firebase.database();
 		const result = yield call(addContact, database.ref().child('/contacts'), action.payload);
-		if(result)
+		if (result)
 			yield put(addContactSuccess())
 		else
 			yield put(addContactFailed())
-	} catch(ex) {
+	} catch (ex) {
 		yield put(addContactFailed())
 	}
 }

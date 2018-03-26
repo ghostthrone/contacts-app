@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, Icon } from '@shoutem/ui';
 
-const textInputMargins = { 
-	marginLeft: 20, 
-	marginRight: 20, 
-	marginTop: 10, 
-	marginBottom: 10 
+const textInputMargins = {
+	marginLeft: 20,
+	marginRight: 20,
+	marginTop: 10,
+	marginBottom: 10
 };
 
 const styles = {
@@ -35,7 +35,7 @@ const styles = {
 const ContactIcon = () => (
 	<View style={styles.container}>
 		<View style={styles.iconContainer}>
-			<Icon name="user-profile" style={styles.icon}/>
+			<Icon name="user-profile" style={styles.icon} />
 		</View>
 	</View>
 );

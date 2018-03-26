@@ -7,7 +7,7 @@ import { addContact } from '../firebase/operations';
 
 export default function configureStore() {
 	const firebase = configureFirebase();
-	const sagaMiddleware = createSagaMiddleware({ 
+	const sagaMiddleware = createSagaMiddleware({
 		context: {
 			firebase
 		}

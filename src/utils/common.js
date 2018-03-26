@@ -5,13 +5,13 @@ import { Platform } from 'react-native';
  * se recomienda usar con async/await
  * @param {number} milliSeconds 
  */
-export const sleep = milliSeconds => 
+export const sleep = milliSeconds =>
 	new Promise(resolve => setTimeout(resolve, milliSeconds));
 
 /**
  * Genera un string con caracteres al azar
  */
-export const idGenerator = () => 
+export const idGenerator = () =>
 	Math.random().toString(36).substr(2, 9);
 
 /**
@@ -20,7 +20,7 @@ export const idGenerator = () =>
  * @param {Array} array 
  */
 export const first = array => {
-	if(array.length == 0)
+	if (array.length == 0)
 		return null;
 
 	return array[0];
@@ -33,7 +33,7 @@ export const first = array => {
  */
 export const last = array => {
 	const arrayLen = array.length;
-	if(arrayLen == 0)
+	if (arrayLen == 0)
 		return null;
 
 	return array[arrayLen - 1];

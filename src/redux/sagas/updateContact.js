@@ -12,7 +12,7 @@ function* updateContactWorker(action) {
 			yield put(resetCurrentContact());
 			yield put(updateContactSuccess());
 		}
-	} catch(ex) {
+	} catch (ex) {
 	}
 }
 

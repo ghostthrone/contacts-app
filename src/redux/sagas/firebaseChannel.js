@@ -22,10 +22,10 @@ export default function* onValueFirebaseWatcher() {
 
 	while (true) {
 		const contacts = yield take(firebaseChannel);
-		if(already) {
+		if (already) {
 			yield put(updateCurrentContactsPending());
 			yield put(updateCurrentContacts(contacts));
-		} else 
+		} else
 			already = true;
 	}
 }

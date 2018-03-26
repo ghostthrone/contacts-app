@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { Dimensions, Platform, StatusBar } from 'react-native'
-import { 
-	Screen, 
-	NavigationBar, 
-	Title, 
-	View, 
-	ListView, 
+import {
+	Screen,
+	NavigationBar,
+	Title,
+	View,
+	ListView,
 	Icon,
 	Row,
 	Text
@@ -13,13 +13,14 @@ import {
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import ActionButton from 'react-native-action-button';
-import { PacmanIndicator } from 'react-native-indicators';
+import { PacmanIndicator as ActivityIndicator } from 'react-native-indicators';
 
 import SearchBox from '../components/SearchBox';
 import { ContactFormScreen, ContactDetailScreen } from '../screens/constants';
 import { selectPlatform, requestStatus } from '../utils/common';
 import { resetCurrentContact, fetchContacts, removeContact, setCurrentContact } from '../redux/modules/contacts';
 import SwipeableSectionList from '../components/SwipeableSectionList';
+import OfflineNotice from '../components/OfflineNotice';
 
 const mapStateToProps = state => ({
 	contacts: state.contacts,
@@ -42,7 +43,7 @@ export default class ContactListScreen extends Component {
 		}
 	}
 
-	showFormContactModal = () => 
+	showFormContactModal = () =>
 		this.props.navigator.showModal({
 			screen: ContactFormScreen,
 			navigatorStyle: {
@@ -62,7 +63,7 @@ export default class ContactListScreen extends Component {
 	handleEditItem = id => {
 		const { contacts } = this.props;
 		const contact = contacts.find(contact => contact.id === id);
-		if(contact !== undefined) {
+		if (contact !== undefined) {
 			this.props.setCurrentContact(contact);
 			this.showFormContactModal();
 		}
@@ -73,7 +74,7 @@ export default class ContactListScreen extends Component {
 	handleContactPressed = id => {
 		const { contacts } = this.props;
 		const contact = contacts.find(contact => contact.id === id);
-		if(contact !== undefined) {
+		if (contact !== undefined) {
 			this.props.setCurrentContact(contact);
 			this.props.navigator.showModal({
 				screen: ContactDetailScreen,
@@ -91,18 +92,18 @@ export default class ContactListScreen extends Component {
 	renderListView = () => {
 		const { contacts, fetchContactsStatus } = this.props;
 
-		switch(fetchContactsStatus) {
+		switch (fetchContactsStatus) {
 			case requestStatus.NONE:
 			case requestStatus.PENDING:
 				return (
-					<View style={{flex: 1, flexDirection: 'row', justifyContent: 'center', height: '100%', alignItems: 'center' }}>
-						<PacmanIndicator color='black' />
+					<View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', height: '100%', alignItems: 'center' }}>
+						<ActivityIndicator color='black' />
 					</View>
 				);
 			case requestStatus.FULFILLED:
 				if (contacts.length === 0)
 					return (
-						<View style={{flex: 1, flexDirection: 'row', justifyContent: 'center', height: '100%', alignItems: 'center' }}>
+						<View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', height: '100%', alignItems: 'center' }}>
 							<Title style={{ color: '#9e9e9e' }}>
 								NO HAY CONTACTOS
 							</Title>
@@ -112,14 +113,14 @@ export default class ContactListScreen extends Component {
 					const filteredContacts = this.applyFilter(this.state.filterPredicate, contacts)
 					if (filteredContacts.length === 0)
 						return (
-							<View style={{flex: 1, flexDirection: 'row', justifyContent: 'center', height: '100%', alignItems: 'center' }}>
+							<View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', height: '100%', alignItems: 'center' }}>
 								<Title style={{ color: '#9e9e9e' }}>
 									NO HAY RESULTADOS
 								</Title>
 							</View>
 						);
 					return (
-						<SwipeableSectionList 
+						<SwipeableSectionList
 							data={filteredContacts}
 							sectionBy='name'
 							onEditItem={this.handleEditItem}
@@ -133,13 +134,13 @@ export default class ContactListScreen extends Component {
 
 	applyFilter = (filter, data) => {
 		filter = filter.toLowerCase();
-		if (!filter) 
+		if (!filter)
 			return data;
-		
+
 		if (filter.length > 3)
-			return data.filter(item => 
-				(item.name.toLowerCase().includes(filter)) || 
-				(item.email.toLowerCase().includes(filter)) || 
+			return data.filter(item =>
+				(item.name.toLowerCase().includes(filter)) ||
+				(item.email.toLowerCase().includes(filter)) ||
 				(item.phone.toLowerCase().includes(filter))
 			);
 		else
@@ -162,6 +163,7 @@ export default class ContactListScreen extends Component {
 						styleName="clear"
 					/>
 				</View>
+				<OfflineNotice />
 				<SearchBox onSearch={param => this.setState({ filterPredicate: param })} />
 				{this.renderListView()}
 				<ActionButton

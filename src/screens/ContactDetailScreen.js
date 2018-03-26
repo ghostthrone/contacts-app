@@ -6,6 +6,7 @@ import { Screen, View, NavigationBar, Icon, Button, Row, Text } from '@shoutem/u
 
 import ContactIcon from '../components/ContactIcon';
 import { resetCurrentContact } from '../redux/modules/contacts';
+import OfflineNotice from '../components/OfflineNotice';
 
 const mapStateToProps = state => ({
 	contact: state.currentContact
@@ -42,19 +43,20 @@ export default class ContactDetailScreen extends Component {
 					/>
 				</View>
 				<ScrollView>
+					<OfflineNotice />
 					<ContactIcon />
 					<View style={{ margin: 20 }}>
 						<Row styleName="small">
 							<Icon name="user-profile" />
-							<Text>{ name }</Text>
+							<Text>{name}</Text>
 						</Row>
 						{(email || null) && <Row styleName="small">
 							<Icon name="web" />
-							<Text>{ email }</Text>
+							<Text>{email}</Text>
 						</Row>}
 						<Row styleName="small">
 							<Icon name="call" />
-							<Text>{ phone }</Text>
+							<Text>{phone}</Text>
 						</Row>
 						<Button styleName='full-width' style={{ marginTop: 10, backgroundColor: 'black' }} onPress={this.handleBack}>
 							<Text style={{ color: 'white' }}>

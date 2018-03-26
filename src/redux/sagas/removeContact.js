@@ -8,7 +8,7 @@ function* removeContactWorker(action) {
 		const firebase = yield getContext('firebase');
 		const database = firebase.database();
 		const result = yield fork(removeContactById, database.ref().child('/contacts'), action.id);
-	} catch(ex) {
+	} catch (ex) {
 	}
 }
 

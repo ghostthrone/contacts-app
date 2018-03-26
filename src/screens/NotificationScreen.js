@@ -18,7 +18,7 @@ const style = {
 const NotificationScreen = props => (
 	<View style={{ ...style.container, ...props.containerStyle }}>
 		{props.renderIcon()}
-		<Text style={{ ...style.text, ...props.textStyle }}>{ ` ${props.text}` }</Text>
+		<Text style={{ ...style.text, ...props.textStyle }}>{` ${props.text}`}</Text>
 	</View>
 );
 

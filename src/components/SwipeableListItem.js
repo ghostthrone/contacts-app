@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { 
-	Subtitle, 
-	Text, 
-	View, 
-	Icon, 
-	Row, 
+import {
+	Subtitle,
+	Text,
+	View,
+	Icon,
+	Row,
 	Caption,
 	TouchableOpacity
 } from '@shoutem/ui';
@@ -33,8 +33,8 @@ export default class SwipeableListItem extends Component {
 	renderSwipeableRightButtons = () => {
 		const { id } = this.props.data;
 		return [
-			<TouchableOpacity 
-				style={{ ...generalTouchableOpacityStyle, backgroundColor: '#1E88E5' }} 
+			<TouchableOpacity
+				style={{ ...generalTouchableOpacityStyle, backgroundColor: '#1E88E5' }}
 				onPress={() => {
 					this.handleUserBeganScrollingParentView();
 					this.props.onEdit(id);
@@ -42,8 +42,8 @@ export default class SwipeableListItem extends Component {
 			>
 				<Icon name="edit" style={{ color: 'white' }} />
 			</TouchableOpacity>,
-			<TouchableOpacity 
-				style={{ ...generalTouchableOpacityStyle, backgroundColor: '#EF5350' }} 
+			<TouchableOpacity
+				style={{ ...generalTouchableOpacityStyle, backgroundColor: '#EF5350' }}
 				onPress={() => {
 					this.handleUserBeganScrollingParentView();
 					this.props.onRemove(id);

@@ -33,7 +33,7 @@ const initialState = {
  * @param {{ type: string, payload: any }} action 
  */
 export default function reducer(state = initialState, action) {
-	switch(action.type) {
+	switch (action.type) {
 		case GET_CONTACT_BY_ID:
 			return {
 				...state,

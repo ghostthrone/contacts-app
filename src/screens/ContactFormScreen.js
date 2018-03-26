@@ -15,11 +15,13 @@ import {
 import { ScrollView, Keyboard } from 'react-native';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
+import { PacmanIndicator as ActivityIndicator } from 'react-native-indicators';
 
 import { selectPlatform, requestStatus } from '../utils/common';
 import ContactIcon from '../components/ContactIcon';
 import { addContact, resetCurrentContact, updateContact } from '../redux/modules/contacts';
 import { NotificationScreen } from '../screens/constants';
+import OfflineNotice from '../components/OfflineNotice';
 
 const textInputMargins = {
 	marginLeft: 20,
@@ -47,7 +49,8 @@ export default class ContactFormScreen extends Component {
 			id: '',
 			name: '',
 			email: '',
-			phone: ''
+			phone: '',
+			editableInput: true
 		}
 
 		this.nameInput = null;
@@ -72,6 +75,8 @@ export default class ContactFormScreen extends Component {
 		this.props.navigator.dismissModal();
 		this.props.resetCurrentContact();
 	}
+
+	handleConnectionChange = isConnected => this.setState({ editableInput: isConnected });
 
 	handleButtonPress = () => {
 		const { name, email, phone } = this.state;
@@ -130,25 +135,80 @@ export default class ContactFormScreen extends Component {
 
 	renderButtons = () => {
 		const isEditing = this.props.contact !== null;
-		if (isEditing)
+		if (this.state.editableInput) {
+			if (isEditing)
+				return (
+					<View styleName="horizontal" style={{ ...textInputMargins }}>
+						<Button styleName="confirmation dark" style={{ backgroundColor: 'black', margin: 0 }} onPress={this.handleButtonPress}>
+							<Text style={{ color: 'white' }}>GUARDAR</Text>
+						</Button>
+						<Button styleName="confirmation" style={{ margin: 0 }} onPress={this.handleBack}>
+							<Text>REGRESAR</Text>
+						</Button>
+					</View>
+				);
+			else
+				return (
+					<Button styleName='full-width' style={{ ...textInputMargins, backgroundColor: 'black' }} onPress={this.handleButtonPress}>
+						<Text style={{ color: 'white' }}>
+							CREAR
+						</Text>
+					</Button>
+				);
+		} else
+			return null;
+	}
+
+	renderForm = () => {
+		if (this.props.addContactStatus === requestStatus.PENDING)
 			return (
-				<View styleName="horizontal" style={{...textInputMargins }}>
-					<Button styleName="confirmation dark" style={{ backgroundColor: 'black', margin: 0 }} onPress={this.handleButtonPress}>
-						<Text style={{ color: 'white' }}>GUARDAR</Text>
-					</Button>
-					<Button styleName="confirmation" style={{ margin: 0 }} onPress={this.handleBack}>
-						<Text>REGRESAR</Text>
-					</Button>
+				<View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', height: '100%', alignItems: 'center' }}>
+					<ActivityIndicator color='black' />
 				</View>
 			);
-		else
-			return (
-				<Button styleName='full-width' style={{ ...textInputMargins, backgroundColor: 'black' }} onPress={this.handleButtonPress}>
-					<Text style={{ color: 'white' }}>
-						CREAR
-					</Text>
-				</Button>
-			);
+
+		return (
+			<ScrollView keyboardShouldPersistTaps='always'>
+				<ContactIcon />
+				<View>
+					<TextInput
+						onChangeText={name => this.setState({ name })}
+						placeholder='Nombre'
+						style={textInputMargins}
+						value={this.state.name}
+						autoCorrect={false}
+						autoFocus={true}
+						autoCapitalize='words'
+						onSubmitEditing={ev => this.emailInput.focus()}
+						inputRef={input => this.nameInput = input}
+						editable={this.state.editableInput}
+					/>
+					<TextInput
+						onChangeText={email => this.setState({ email })}
+						placeholder='Email'
+						style={textInputMargins}
+						value={this.state.email}
+						keyboardType='email-address'
+						autoCorrect={false}
+						autoCapitalize='none'
+						inputRef={input => this.emailInput = input}
+						onSubmitEditing={ev => this.phoneInput.focus()}
+						editable={this.state.editableInput}
+					/>
+					<TextInput
+						onChangeText={phone => this.setState({ phone })}
+						placeholder='Telefono'
+						style={textInputMargins}
+						value={this.state.phone}
+						keyboardType='phone-pad'
+						inputRef={input => this.phoneInput = input}
+						onSubmitEditing={ev => Keyboard.dismiss()}
+						editable={this.state.editableInput}
+					/>
+					{this.renderButtons()}
+				</View>
+			</ScrollView>
+		);
 	}
 
 	componentDidMount = () => {
@@ -186,43 +246,8 @@ export default class ContactFormScreen extends Component {
 						)}
 					/>
 				</View>
-				<ScrollView keyboardShouldPersistTaps='always'>
-					<ContactIcon />
-					<View>
-						<TextInput
-							onChangeText={name => this.setState({ name })}
-							placeholder='Nombre'
-							style={textInputMargins}
-							value={this.state.name}
-							autoCorrect={false}
-							autoFocus={true}
-							autoCapitalize='words'
-							onSubmitEditing={ev => this.emailInput.focus()}
-							inputRef={input => this.nameInput = input}
-						/>
-						<TextInput
-							onChangeText={email => this.setState({ email })}
-							placeholder='Email'
-							style={textInputMargins}
-							value={this.state.email}
-							keyboardType='email-address'
-							autoCorrect={false}
-							autoCapitalize='none'
-							inputRef={input => this.emailInput = input}
-							onSubmitEditing={ev => this.phoneInput.focus()}
-						/>
-						<TextInput
-							onChangeText={phone => this.setState({ phone })}
-							placeholder='Telefono'
-							style={textInputMargins}
-							value={this.state.phone}
-							keyboardType='phone-pad'
-							inputRef={input => this.phoneInput = input}
-							onSubmitEditing={ev => Keyboard.dismiss()}
-						/>
-						{this.renderButtons()}
-					</View>
-				</ScrollView>
+				<OfflineNotice onConnectionChange={this.handleConnectionChange} />
+				{this.renderForm()}
 			</Screen>
 		);
 	}
